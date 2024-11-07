@@ -19,7 +19,11 @@ app = Flask(__name__)
 historicos = {}
 
 # Função que interage com o modelo OpenAI para gerar respostas
+<<<<<<< HEAD
 def mensagem(historico):
+=======
+def funcao(historico):
+>>>>>>> 97c0c5cfc0c50bbc6b0529ad21927eda394d3c25
     completion = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=historico,
@@ -69,7 +73,11 @@ def webhook():
                         for message in change["value"]["messages"]:
                             if message["type"] == "text":
                                 phone_number = message["from"]
+<<<<<<< HEAD
                                 texto_mensagem = message["text"]["body"]
+=======
+                                text = message["text"]["body"]
+>>>>>>> 97c0c5cfc0c50bbc6b0529ad21927eda394d3c25
 
                                 # Iniciar histórico de conversa para o número, se não existir
                                 if phone_number not in historicos:
@@ -80,10 +88,17 @@ def webhook():
                                     ]
                                 
                                 # Adiciona a mensagem do usuário ao histórico
+<<<<<<< HEAD
                                 historicos[phone_number].append({"role": "user", "content": texto_mensagem})
 
                                 # Gera a resposta usando o histórico completo
                                 resposta = mensagem(historicos[phone_number])
+=======
+                                historicos[phone_number].append({"role": "user", "content": text})
+
+                                # Gera a resposta usando o histórico completo
+                                resposta = funcao(historicos[phone_number])
+>>>>>>> 97c0c5cfc0c50bbc6b0529ad21927eda394d3c25
 
                                 # Adiciona a resposta ao histórico
                                 historicos[phone_number].append({"role": "system", "content": resposta})

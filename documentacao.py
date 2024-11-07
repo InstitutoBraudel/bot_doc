@@ -2,12 +2,16 @@ from openai import OpenAI
 from dotenv import load_dotenv
 import os
 from contexto import PROMPT_CONTEXTO
+<<<<<<< HEAD
 from flask import Flask, request, jsonify
 import requests
+=======
+>>>>>>> 97c0c5cfc0c50bbc6b0529ad21927eda394d3c25
 
 load_dotenv()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+<<<<<<< HEAD
 whatsapp_token = os.getenv("WHATSAPP_TOKEN")
 whatsapp_phone_id = os.getenv("NUMBER_ID")
 VERIFY_TOKEN = "my_verify_token"
@@ -15,6 +19,8 @@ VERIFY_TOKEN = "my_verify_token"
 app = Flask(__name__)
 
 historicos = {}
+=======
+>>>>>>> 97c0c5cfc0c50bbc6b0529ad21927eda394d3c25
 
 def mensagem(historico):
     completion = client.chat.completions.create(
@@ -23,6 +29,7 @@ def mensagem(historico):
    )
     return completion.choices[0].message.content
 
+<<<<<<< HEAD
 def send_whatsapp_message(phone_number, message):
     url = f"https://graph.facebook.com/v13.0/{whatsapp_phone_id}/messages"
     headers = {
@@ -84,6 +91,34 @@ def webhook():
 
 if __name__ == "__main__":
  app.run(debug=True)    
+=======
+def assistente():
+    historico = [
+        {"role": "system", "content": f"""
+         Você é um assistente que adora retirar dúvidas ligadas apenas ao instituto fernand Braudel de economia mundial.
+         - Retire seus dados de treinamento apenas do contexto de: {PROMPT_CONTEXTO}
+         - Não utilize seus dados de treinamento da internet.
+         """ }
+    ]
+
+    while True:
+
+        enviar_mensagem = input("Faça uma pergunta ao assistente: ")
+        if enviar_mensagem.lower() == 'sair': 
+            print("Chat encerrado.")
+            break
+
+        historico.append({"role": "user", "content": enviar_mensagem})
+
+        resposta = mensagem(historico)
+
+        historico.append({"role": "system", "content": resposta})
+
+        print(resposta)
+
+if __name__ == "__main__":
+ assistente()    
+>>>>>>> 97c0c5cfc0c50bbc6b0529ad21927eda394d3c25
 
 
 
