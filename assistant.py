@@ -42,7 +42,7 @@ def criar_assistente_com_vector_store(client, model, nome, instrucoes, file_path
             - Tirar dúvidas sobre o projeto Braudel Papers,
             - Tirar dúvidas sobre o projeto Programa Círculos de Leitura,
             - Tirar dúvidas sobre os livros do Programa Círculos de Leitura,
-            Não responderei nada que fuja do tema Instituto Braudel e Programa Círculos de Leitura.
+            Não responderei nada que fuja do tema Instituto Braudel
             Os arquivos associados à thread são os arquivos que vou utilizar para responder as perguntas.
         """,
         tool_resources={"file_search": {"vector_store_ids": [vector_store.id]}},
@@ -146,6 +146,7 @@ def webhook():
                                 send_whatsapp_message(phone_number, resposta.content[0].text.value)
                                 
         return jsonify({"status": "success"}), 200
+
 
 if __name__ == "__main__":
     app.run(debug=True)

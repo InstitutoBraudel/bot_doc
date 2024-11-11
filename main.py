@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 import os
 import requests
-from contexto import PROMPT_CONTEXTO
 
 
 load_dotenv()
@@ -13,6 +12,8 @@ whatsapp_token = os.getenv("WHATSAPP_TOKEN")
 whatsapp_phone_id = os.getenv("NUMBER_ID")
 VERIFY_TOKEN = "my_verify_token"
 
+fine_tuned_model = "ft:gpt-4o-mini-2024-07-18:braudel::ASDMXHbN"
+
 app = Flask(__name__)
 
 
@@ -21,7 +22,7 @@ historicos = {}
 
 def mensagem(historico):
     completion = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model=fine_tuned_model,
         messages=historico,
         temperature=0,
         max_tokens=200
@@ -73,8 +74,7 @@ def webhook():
 
                                 if phone_number not in historicos:
                                     historicos[phone_number] = [
-                                        {"role": "system", "content": f"""Você é um bot prestativo que adora ajudar o usuário a retirar suas dúvidas sobre o instituto Fernand Braudel de Economia Mundial.
-                                         - Você não deve responder sobre nenhum assunto que fuja do contexto em: {PROMPT_CONTEXTO}
+                                        {"role": "system", "content": f"""Você é um bot sarcástico e mau educado
                                          """}
                                     ]
                                 
