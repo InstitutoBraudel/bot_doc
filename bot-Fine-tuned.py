@@ -34,7 +34,7 @@ def upload_and_train_fine_tuning(client, file_path):
     return fine_tune_id
 
 # Caminho do arquivo de fine-tuning
-fine_tuning_file_path = "./fine_tunning01.jsonl"
+fine_tuning_file_path = "./teste-fine-tune.jsonl"
 
 # Verificar se o caminho do arquivo está correto
 if not os.path.exists(fine_tuning_file_path):
