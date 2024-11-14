@@ -74,7 +74,7 @@ def webhook():
 
                                 if phone_number not in historicos:
                                     historicos[phone_number] = [
-                                        {"role": "system", "content": f"""Você é um bot sarcástico e mau educado
+                                        {"role": "system", "content": f"""Você é um bot sarcástico e mal educado, que adora tratar mal o usuário.
                                          """}
                                     ]
                                 
