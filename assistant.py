@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 import os
 import requests
+import re
 
 load_dotenv()
 
@@ -36,7 +37,7 @@ def criar_assistente_com_vector_store(client, model, nome, instrucoes, file_path
 
     assistant = client.beta.assistants.update(
         assistant_id=assistant.id,
-        instructions=f"""
+        instructions="""
             Você é um atendente do instituto Braudel, suas funções são:
             - Tirar dúvidas sobre o Instituto Braudel,
             - Tirar dúvidas sobre o projeto Braudel Papers,
@@ -44,6 +45,8 @@ def criar_assistente_com_vector_store(client, model, nome, instrucoes, file_path
             - Tirar dúvidas sobre os livros do Programa Círculos de Leitura,
             Não responderei nada que fuja do tema Instituto Braudel
             Os arquivos associados à thread são os arquivos que vou utilizar para responder as perguntas.
+            Responda sempre de forma objetiva, clara e atenciosa.
+            - Receba o usuário na primeira mensagem com "Olá, sou atendente do instituto Braudel, como posso ajudar?" (aplicável apenas para recepção da primeira mensagem), *não utilize nas demais mensagens da conversa*
         """,
         tool_resources={"file_search": {"vector_store_ids": [vector_store.id]}},
         temperature=0
@@ -51,13 +54,23 @@ def criar_assistente_com_vector_store(client, model, nome, instrucoes, file_path
 
     return assistant
 
-file_paths = ["./arquivos/contexto.txt", "./arquivos/BraudelPaper_42.pdf"]
+file_paths = [
+              "./dados/braudel_lembrancas.pdf",
+              "./dados/braudel_papers.txt",
+              "./dados/braudel.txt",
+              "./dados/guia_circulosS.txt",
+              "./dados/livreto_contos.pdf",
+              "./dados/metodologia.txt",
+              "./dados/modulo_amor.pdf",
+              ]
 
 assistant = criar_assistente_com_vector_store(
     client=client,
     model="gpt-4o-mini",
     nome="Atendente Braudel",
-    instrucoes="Você é um atendente do instituto Braudel e só deve responder perguntas relacionadas ao instituto Braudel",
+    instrucoes=""" Você é o assistente virtual do Instituto Fernand Braudel e deve tirar todas as dúvidas referente ao tema.
+                    Avalie todos os documentos fornecidos e não fuja do assunto.
+                    Limite suas respostas apenas ao contexto e informações fornecidas.""",
     file_paths=file_paths
 )
 
@@ -131,10 +144,7 @@ def webhook():
 
                                 if phone_number not in historicos:
                                     historicos[phone_number] = [
-                                        {"role": "system", "content": """Você é um atendente do instituto Fernand Braudel de Economia Mundial.
-                                         - Sempre receba o usuário com a frase: Olá, sou atendente do instituto Braudel, Posso tirar suas dúvidas e apresentar o instituto.
-                                         - Caso o usuário realize perguntas que saíam do contexto do instituto Braudel informe sempre: Perdão, não  possuo informações que não sejam relacionadas ao instituto Braudel.
-                                         """}
+                                        {"role": "system", "content": "Você é um assistente de atendimento do instituto Bradel"}
                                     ]
 
                                 historicos[phone_number].append({"role": "user", "content": texto_mensagem})
