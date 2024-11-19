@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 import os
 import requests
-import re
+from contexto import PROMPT_CONTEXTO
 
 load_dotenv()
 
@@ -11,50 +11,26 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 whatsapp_token = os.getenv("WHATSAPP_TOKEN")
 whatsapp_phone_id = os.getenv("NUMBER_ID")
 VERIFY_TOKEN = "my_verify_token"
+modelo = "gpt-4o-mini" 
 
 app = Flask(__name__)
 
-historicos = {}
-
-def adicionar_arquivos_a_vector_store(client, vector_store_id, file_paths):
-    file_streams = [open(path, "rb") for path in file_paths]
-    file_batch = client.beta.vector_stores.file_batches.upload_and_poll(
-        vector_store_id=vector_store_id, files=file_streams
-    )
-    print(file_batch.status)
-
-def criar_assistente_com_vector_store(client, model, nome, instrucoes, file_paths):
+def bot(prompt):
     assistant = client.beta.assistants.create(
-        name=nome,
-        instructions=instrucoes,
-        model=model,
+        name="Assistente Braudel",
+        instructions="""
+                    Você é o assistente virtual do Instituto Fernand Braudel e deve tirar todas as dúvidas referente ao tema.
+                    Avalie todos os documentos fornecidos e não fuja do assunto.
+                    Limite suas respostas apenas ao contexto e informações fornecidas.
+                """,
+        model=modelo,
         temperature=0,
         tools=[{"type": "file_search"}],
     )
 
     vector_store = client.beta.vector_stores.create(name="Arquivos Braudel")
-    adicionar_arquivos_a_vector_store(client, vector_store.id, file_paths)
 
-    assistant = client.beta.assistants.update(
-        assistant_id=assistant.id,
-        instructions="""
-            Você é um atendente do instituto Braudel, suas funções são:
-            - Tirar dúvidas sobre o Instituto Braudel,
-            - Tirar dúvidas sobre o projeto Braudel Papers,
-            - Tirar dúvidas sobre o projeto Programa Círculos de Leitura,
-            - Tirar dúvidas sobre os livros do Programa Círculos de Leitura,
-            Não responderei nada que fuja do tema Instituto Braudel
-            Os arquivos associados à thread são os arquivos que vou utilizar para responder as perguntas.
-            Responda sempre de forma objetiva, clara e atenciosa.
-            - Receba o usuário na primeira mensagem com "Olá, sou atendente do instituto Braudel, como posso ajudar?" (aplicável apenas para recepção da primeira mensagem), *não utilize nas demais mensagens da conversa*
-        """,
-        tool_resources={"file_search": {"vector_store_ids": [vector_store.id]}},
-        temperature=0
-    )
-
-    return assistant
-
-file_paths = [
+    file_paths = [
               "./dados/braudel_lembrancas.pdf",
               "./dados/braudel_papers.txt",
               "./dados/braudel.txt",
@@ -63,18 +39,23 @@ file_paths = [
               "./dados/metodologia.txt",
               "./dados/modulo_amor.pdf",
               ]
+    
+    file_streams = [open(path, "rb") for path in file_paths]
 
-assistant = criar_assistente_com_vector_store(
-    client=client,
-    model="gpt-4o-mini",
-    nome="Atendente Braudel",
-    instrucoes=""" Você é o assistente virtual do Instituto Fernand Braudel e deve tirar todas as dúvidas referente ao tema.
-                    Avalie todos os documentos fornecidos e não fuja do assunto.
-                    Limite suas respostas apenas ao contexto e informações fornecidas.""",
-    file_paths=file_paths
-)
+    # Faz o upload dos arquivos para o repositório de vetores
+    file_batch = client.beta.vector_stores.file_batches.upload_and_poll(
+        vector_store_id=vector_store.id, files=file_streams
+    )
+    print(file_batch.status)
 
-def bot(prompt):
+    assistant = client.beta.assistants.update(
+        assistant_id=assistant.id,
+        instructions=F"Você é um atendente do instituto Braudel, siga as instruções do contexto passado em: {PROMPT_CONTEXTO}",
+        tool_resources={"file_search": {"vector_store_ids": [vector_store.id]}},
+        temperature=0
+    )
+
+
     thread = client.beta.threads.create(
         messages=[
             {
@@ -84,6 +65,7 @@ def bot(prompt):
         ]
     )
 
+    # Executa a conversa e aguarda a resposta
     run = client.beta.threads.runs.create_and_poll(
         thread_id=thread.id, assistant_id=assistant.id
     )
@@ -99,7 +81,7 @@ def bot(prompt):
                 for hit in file_hits:
                     print(f"Response derived from file: {hit['file_name']}")
 
-    return resposta
+    return resposta #Retorna a resposta do assistente Braudel
 
 def send_whatsapp_message(phone_number, message):
     url = f"https://graph.facebook.com/v13.0/{whatsapp_phone_id}/messages"
@@ -133,6 +115,7 @@ def webhook():
 
     if request.method == "POST":
         data = request.get_json()
+        app.logger.info(f"Received webhook data: {data}")
         if data["object"] == "whatsapp_business_account":
             for entry in data["entry"]:
                 for change in entry["changes"]:
@@ -140,22 +123,12 @@ def webhook():
                         for message in change["value"]["messages"]:
                             if message["type"] == "text":
                                 phone_number = message["from"]
-                                texto_mensagem = message["text"]["body"]
+                                text = message["text"]["body"]
+                                resposta = bot(text)  # Chama a função bot com o texto recebido
+                                texto_resposta = resposta.content[0].text.value
+                                send_whatsapp_message(phone_number, texto_resposta)  # Envia a resposta para o WhatsApp
 
-                                if phone_number not in historicos:
-                                    historicos[phone_number] = [
-                                        {"role": "system", "content": "Você é um assistente de atendimento do instituto Bradel"}
-                                    ]
-
-                                historicos[phone_number].append({"role": "user", "content": texto_mensagem})
-
-                                resposta = bot(texto_mensagem)
-
-                                historicos[phone_number].append({"role": "assistant", "content": resposta.content[0].text.value})
-
-                                send_whatsapp_message(phone_number, resposta.content[0].text.value)
-                                
-        return jsonify({"status": "success"}), 200
+        return jsonify({"status": "success"}), 200  # Retorna sucesso após processar o webhook
 
 
 if __name__ == "__main__":
