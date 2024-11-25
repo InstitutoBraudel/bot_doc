@@ -42,7 +42,7 @@ def bot(prompt):
     
     file_streams = [open(path, "rb") for path in file_paths]
 
-    # Faz o upload dos arquivos para o repositório de vetores
+    
     file_batch = client.beta.vector_stores.file_batches.upload_and_poll(
         vector_store_id=vector_store.id, files=file_streams
     )
@@ -65,7 +65,7 @@ def bot(prompt):
         ]
     )
 
-    # Executa a conversa e aguarda a resposta
+
     run = client.beta.threads.runs.create_and_poll(
         thread_id=thread.id, assistant_id=assistant.id
     )
@@ -81,7 +81,7 @@ def bot(prompt):
                 for hit in file_hits:
                     print(f"Response derived from file: {hit['file_name']}")
 
-    return resposta #Retorna a resposta do assistente Braudel
+    return resposta 
 
 def send_whatsapp_message(phone_number, message):
     url = f"https://graph.facebook.com/v13.0/{whatsapp_phone_id}/messages"
