@@ -29,7 +29,7 @@ def upload_and_train_fine_tuning(client, file_path):
         model="gpt-4o-mini-2024-07-18",  # Usando um modelo disponível para fine-tuning
     )
     fine_tune_id = fine_tune_response.id
-    print(f"Fine-tuning iniciado. ID do fine-tune: {fine_tune_id}")
+    print(f"Fine-tuning iniciado. ID do fine-tune: {fine_tune_id}") 
 
     return fine_tune_id
 
@@ -60,3 +60,7 @@ else:
             else:
                 print(f"Status atual: {status}. Verificando novamente em 60 segundos...")
             time.sleep(60)  # Espera de 60 segundos antes de checar novamente
+
+  #Teste de fine-tunning: 
+ #ft:gpt-4o-mini-2024-07-18:braudel::ASTOXWnL (teste de funcionamento redações 01)
+ #ft:gpt-4o-mini-2024-07-18:braudel::AXzVig1A (teste de funcionamento redações*50 linhas)
