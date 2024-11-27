@@ -34,7 +34,11 @@ def upload_and_train_fine_tuning(client, file_path):
     return fine_tune_id
 
 # Caminho do arquivo de fine-tuning
+<<<<<<< HEAD
 fine_tuning_file_path = "./fine-tunning/teste-fine-tune01.jsonl"
+=======
+fine_tuning_file_path = "./fine-tunning/teste-fine-tune02.jsonl"
+>>>>>>> 772efb6b5addd266207fa8bc6c6071fffe272b91
 
 # Verificar se o caminho do arquivo está correto
 if not os.path.exists(fine_tuning_file_path):
@@ -63,4 +67,8 @@ else:
 
   #Teste de fine-tunning: 
  #ft:gpt-4o-mini-2024-07-18:braudel::ASTOXWnL (teste de funcionamento redações 01)
+<<<<<<< HEAD
  #ft:gpt-4o-mini-2024-07-18:braudel::AXzVig1A (teste de funcionamento redações*50 linhas)
+=======
+ #ft:gpt-4o-mini-2024-07-18:braudel::AXzVig1A (teste de funcionamento redações*50 linhas)
+>>>>>>> 772efb6b5addd266207fa8bc6c6071fffe272b91
