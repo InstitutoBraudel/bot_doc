@@ -67,7 +67,6 @@ else:
 
   #Teste de fine-tunning: 
  #ft:gpt-4o-mini-2024-07-18:braudel::ASTOXWnL (teste de funcionamento redações 01)
-<<<<<<< HEAD
  #ft:gpt-4o-mini-2024-07-18:braudel::AXzVig1A (teste de funcionamento redações*50 linhas)
 =======
  #ft:gpt-4o-mini-2024-07-18:braudel::AXzVig1A (teste de funcionamento redações*50 linhas)
