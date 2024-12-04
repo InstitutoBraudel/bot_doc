@@ -35,10 +35,6 @@ def upload_and_train_fine_tuning(client, file_path):
 
 # Caminho do arquivo de fine-tuning
 fine_tuning_file_path = "./fine-tunning/teste-fine-tune02.jsonl"
-<<<<<<< HEAD
-=======
-
->>>>>>> ac7dcc21240e9d68a6db568ba1a64162840afd14
 
 # Verificar se o caminho do arquivo está correto
 if not os.path.exists(fine_tuning_file_path):
@@ -64,12 +60,3 @@ else:
             else:
                 print(f"Status atual: {status}. Verificando novamente em 60 segundos...")
             time.sleep(60)  # Espera de 60 segundos antes de checar novamente
-
-  #Teste de fine-tunning: 
- #ft:gpt-4o-mini-2024-07-18:braudel::ASTOXWnL (teste de funcionamento redações 01)
-<<<<<<< HEAD
- #ft:gpt-4o-mini-2024-07-18:braudel::AXzVig1A (teste de funcionamento redações*50 linhas)
-=======
- #ft:gpt-4o-mini-2024-07-18:braudel::AXzVig1A (teste de funcionamento redações*50 linhas)
-
->>>>>>> ac7dcc21240e9d68a6db568ba1a64162840afd14
