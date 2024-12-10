@@ -13,7 +13,7 @@ Slogan: "O Brasil no centro do mundo!"
   - Henrique Dau: Diretor Executivo - henriquedau@braudel.org.br
   - Catalina Pagés: Círculos de Leitura - catalina@braudel.org.br
   - Débora Nascimento: Círculos de Leitura - debora@braudel.org.br
-  - Marco Aurélio: Tecnologia e Desenvovimento - marco@braudel.org.br
+  - Leonardo Silva: Tecnologia e Desenvovimento - leonardosilva@braudel.org.br
   - Junior Staff: Marketing e Mídias sociais - juniorstaff@braudel.org.br
   - Alanne Souza: Gestão de Projetos - alannesouza@braudel.org.br
   - Margarida Guimarães: Coordenadora Administrativa - margarida@braudel.org.br
@@ -83,7 +83,7 @@ Programas do Instituto
    - Margarida Guimarães: Coordenadora Administrativa
    - Débora Nascimento: Coordenadora Pedagógica
    - Alanne Souza: Gestão de Projetos
-   - Marco Aurélio: Desenvolvedor de Software
+   - Leonardo Silva: Desenvolvedor de Software
    - Luccas Bergami: Coordenador Estratégico
    - Junior Staff: Coordenador de Marketing
    - Renato Rocha: Analista Administrativo
@@ -92,4 +92,5 @@ Programas do Instituto
          - Rayanne Oliveira
          - Paula Ingridy
          - Luis Gustavo
+         - Leonardo Silva
 
