@@ -7,6 +7,15 @@ load_dotenv()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+#Modelos de fine-tunning (teste): 
+ #ft:gpt-4o-mini-2024-07-18:braudel::ASTOXWnL (teste de funcionamento redações 01
+ #ft:gpt-4o-mini-2024-07-18:braudel::AXzVig1A (teste de funcionamento redações*50 linhas)
+ #ft:gpt-4o-mini-2024-07-18:braudel::AYCOLWJU (teste de funcionamento redações*100 linhas)
+ #ft:gpt-4o-mini-2024-07-18:braudel::AaW3l981 (teste de fincionamento redações*200 linhas)
+ #ft:gpt-4o-mini-2024-07-18:braudel::AaWUmHzE (teste de funcionamento apenas competência #1)
+ #ft:gpt-4o-mini-2024-07-18:braudel::Ab68gaVE (teste de funcionamento apenas competência #1*100 linhas de treinamento)
+ #ft:gpt-4o-mini-2024-07-18:braudel::Ad0c4qWC (teste de funcionamento apenas competência #1*100 linhas apenas com pontuação)
+
 # Função para fazer upload do arquivo de fine-tuning e treinar o modelo
 def upload_and_train_fine_tuning(client, file_path):
     # Verificar se o arquivo existe
@@ -34,7 +43,7 @@ def upload_and_train_fine_tuning(client, file_path):
     return fine_tune_id
 
 # Caminho do arquivo de fine-tuning
-fine_tuning_file_path = "./fine-tunning/teste-fine-tune02.jsonl"
+fine_tuning_file_path = "./fine-tunning/fine-tune-comp1_2.jsonl"
 
 # Verificar se o caminho do arquivo está correto
 if not os.path.exists(fine_tuning_file_path):
